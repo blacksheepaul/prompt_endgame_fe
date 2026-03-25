@@ -75,12 +75,15 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useRoom } from '../composables/useRoom'
 
+declare const __BACKEND_ADDR__: string
+
 const router = useRouter()
 const { createNewRoom } = useRoom()
 
 const sceneryId = ref('default')
 const loading = ref(false)
 const errorMsg = ref('')
+const backendAddr = __BACKEND_ADDR__
 
 async function startInterview() {
   loading.value = true
@@ -90,7 +93,7 @@ async function startInterview() {
     const roomId = await createNewRoom(sceneryId.value)
     router.push({ name: 'room', params: { id: roomId } })
   } catch (err) {
-    errorMsg.value = 'Failed to create room. Is the backend running on localhost:8080?'
+    errorMsg.value = `Failed to create room. Is the backend running on ${backendAddr}?`
     console.error('Failed to create room:', err)
   } finally {
     loading.value = false
